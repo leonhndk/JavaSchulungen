@@ -1,26 +1,45 @@
-/**
- * 
- */
 package de.esg.ausbildung.honl.game;
 
 /**
- * 
+ * holds ranks and suits of card deck
  */
 public class Card {
 
-	/**
-	 * 
-	 */
-	public Card() {
-		// TODO Auto-generated constructor stub
+	enum Rank {
+		TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE;
+	}
+
+	enum Suit {
+		HEARTS, SPADES, DIAMONDS, CLUBS;
+	}
+
+	private Suit suit;
+	private Rank rank;
+
+	public Card(Rank rank, Suit suit) {
+		this.rank = rank;
+		this.suit = suit;
 	}
 
 	/**
-	 * @param args
+	 * @param string, passed by overridden toString method 
+	 * returns a string that is exactly 19 characters long by adding whitespace if needed
+	 * returns null if string exceeds length of 19 
+	 *
 	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+	private String normalizeString(String string) {
+		if (string.length() > 19) {
+			return null;
+		}
+		while (string.length() < 19) {
+			string = string + " ";
+		}
+		return string;
+	}
 
+	@Override
+	public String toString() {
+		return normalizeString(rank + " of " + suit);
 	}
 
 }
