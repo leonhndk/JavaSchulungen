@@ -8,21 +8,25 @@ public class Deck {
 
 	/**
 	 * @param deckSize (user specified size of the deck through console input) fills
-	 *                 deck with cards iterating through enums Rank and Suit
+	 * deck with cards iterating through enums Rank and Suit
 	 */
-	private Deck(int deckSize) {
-		int modifier = 0;
-		// for deck size of 32 first card to populate deck has to be of rank seven,
-		// moves "pointer" to that position
+	public Deck(int deckSize) {
 		if (deckSize == 32) {
-			modifier = 5;
+			for (Rank rank : Rank.values()) {
+				if (rank.partOfSmallDeck()) {
+					for (Suit suit : Suit.values()) {
+						Card card = new Card(rank, suit);
+						deck.add(card);
+					}
+				}
+			}
 		}
-		for (int i = 0; i < 13 - modifier; i++) {
-			Card.Rank rank = Card.Rank.values()[i + modifier];
-			for (int j = 0; j < 4; j++) {
-				Card.Suit suit = Card.Suit.values()[j];
-				// creates new card and adds it to the deck
-				deck.add(new Card(rank, suit));
+		if (deckSize == 52) {
+			for (Rank rank : Rank.values()) {
+				for (Suit suit : Suit.values()) {
+					Card card = new Card(rank, suit);
+					deck.add(card);
+				}
 			}
 		}
 	}
@@ -40,11 +44,6 @@ public class Deck {
 				System.out.println();
 			}
 			i++;
-
 		}
-	}
-
-	public static Deck buildDeck(int deckSize) {
-		return new Deck(deckSize);
 	}
 }
