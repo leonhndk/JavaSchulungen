@@ -12,6 +12,10 @@ public class Card {
 		this.rank = rank;
 		this.suit = suit;
 	}
+	
+	public int getCardValue() {
+		return rank.getCardValue();
+	}
 
 	/**
 	 * @param cardDescription 
