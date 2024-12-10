@@ -2,59 +2,29 @@ package de.esg.ausbildung.honl.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 
 public class Deck {
 
 	private ArrayList<Card> deck = new ArrayList<>();
-	private Random random = new Random();
 
 	/**
-	 * @param numberOfDecks: allows for multiple decks of cards in one playing deck
+	 * @param numberOfDecks: allows for multiple decks of cards in one playing deck,
+	 *                       option to shuffle
 	 */
-	public Deck(int numberOfDecks) {
+	public Deck(int numberOfDecks, boolean shuffled) {
 		while (numberOfDecks >= 1) {
-		buildBigDeck();
-		numberOfDecks--;
-		}
-		Collections.shuffle(deck);
-	}
-	
-	/**
-	 * @param deckSize (user specified size of the deck through console input) fills
-	 *                 deck with cards iterating through enums Rank and Suit 
-	 *                 constructor for future use, allows modification to deck size and shuffling
-	 */
-	public Deck(int deckSize, boolean shuffled) {
-		deck.clear();
-		switch (deckSize) {
-		case 32:
-			buildSmallDeck();
-			break;
-		case 52:
-			buildBigDeck();
-			break;
-		// not strictly necessary, deck size is passed as fixed value when instantiating
-		default:
-			throw new IllegalArgumentException("Invalid deck size, please specify 32 or 52");
-		}
-		if (shuffled) {
-			Collections.shuffle(deck);
-		}
-	}
-
-	private void buildSmallDeck() {
-		for (Rank rank : Rank.values()) {
-			if (rank.partOfSmallDeck()) {
-				for (Suit suit : Suit.values()) {
-					Card card = new Card(rank, suit);
-					deck.add(card);
-				}
+			buildDeck();
+			numberOfDecks--;
+			if (shuffled) {
+				Collections.shuffle(deck);
 			}
 		}
 	}
 
-	private void buildBigDeck() {
+	/**
+	 * iterates through enums suit and rank to populate deck
+	 */
+	private void buildDeck() {
 		for (Rank rank : Rank.values()) {
 			for (Suit suit : Suit.values()) {
 				Card card = new Card(rank, suit);
@@ -63,12 +33,14 @@ public class Deck {
 		}
 	}
 
-	public Card drawRandomCard() {
+	/**
+	 * draws card from the top of the deck, removes it from deck
+	 */
+	public Card drawCard() {
 		if (deck.isEmpty()) {
-			System.out.println("Error! There are no cards in the deck, please try again");
+			System.out.println("Error! There are no cards left in the deck.");
 		}
-		int randomIndex = random.nextInt(deck.size());
-		return deck.remove(randomIndex);
+		return deck.remove(0);
 	}
 
 	/**
