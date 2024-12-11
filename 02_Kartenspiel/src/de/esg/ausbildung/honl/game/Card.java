@@ -16,6 +16,9 @@ public class Card {
 	public int getCardValue() {
 		return rank.getCardValue();
 	}
+	public Rank getRank() {
+		return rank;
+	}
 
 	/**
 	 * @param cardDescription 
