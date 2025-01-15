@@ -1,13 +1,11 @@
 package de.esg.ausbildung.honl.game;
 
 public class Main {
-	/**
-	 * @param args; creates new game and calls playGame method
-	 */
-	public static void main(String[] args) {
-		Game game = new Game();
-		game.playGame();
-		
-	}
+    public static void main(String[] args) {
+        Deck deck = new Deck(1);
+        deck.printDeck();
+        SimpleGame game = new SimpleGame();
+        game.playGame();
 
+    }
 }
