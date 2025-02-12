@@ -13,7 +13,7 @@ public class SimpleGame {
 
 
     public SimpleGame() {
-        this.deck = new Deck(2);
+//        this.deck = new Deck(2);
         dealerWins = 0;
         playerWins = 0;
         this.player = new Player();
@@ -128,11 +128,19 @@ public class SimpleGame {
      * contains logic to play multiple rounds and tallies score
      * allows player to decide to continue or quit after each round
      */
-
-    public void playGame() {
-        boolean gameFinished = false;
-        playerWins = 0;
-        dealerWins = 0;
+    public void playGame(int numOfDecks) {
+    	System.out.println("Saved game available. Would you like to load the saved game state?");
+    	boolean loadGame = Utils.promptInput();
+    	if (loadGame) {
+    		playerWins = Utils.loadScore()[0];
+    		dealerWins = Utils.loadScore()[1];
+    	}
+    	else {
+    		playerWins = 0;
+    		dealerWins = 0;
+    		this.deck = new Deck(numOfDecks);
+    	}
+  
         while (!gameFinished) {
             playRound();
             System.out.println("Current overall score: \tPlayer: " + playerWins + "\tDealer: " + dealerWins);
@@ -141,6 +149,7 @@ public class SimpleGame {
         }
         System.out.println("Final score: \nPlayer: " + playerWins + "\tDealer: " + dealerWins);
         System.out.println("Thank you for playing");
+        Utils.saveGame(playerWins, dealerWins, deck);
         Utils.closeScanner();
     }
 }

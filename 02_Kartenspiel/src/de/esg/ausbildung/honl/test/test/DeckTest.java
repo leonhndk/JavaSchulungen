@@ -3,10 +3,11 @@ package de.esg.ausbildung.honl.test.test;
 import de.esg.ausbildung.honl.game.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class DeckTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     void drawCardTest() {
         Deck deck = new Deck(1);
         // fresh deck should hold 52 cards
@@ -19,7 +20,7 @@ class DeckTest {
     /**
      * removing a card from deck and reset it. Deck should now hold 104 cards again 
      */
-    @org.junit.jupiter.api.Test
+    @Test
     void resetDeckTest() {
         Deck deck = new Deck(2);
         // draw a card thus removing it from the deck
