@@ -15,6 +15,20 @@ public class TestConstants {
     public static final Card SIX_DIAMONDS = new Card(Rank.SIX, Suit.DIAMONDS);
     public static final Card TWO_CLUBS = new Card(Rank.TWO, Suit.CLUBS);
     public static final Card JACK_CLUBS = new Card(Rank.JACK, Suit.CLUBS);
-    public static final List<Card> inputCards = List.of(ACE_HEARTS, TEN_HEARTS,
+    public static final List<Card> INPUT_CARDS = List.of(ACE_HEARTS, TEN_HEARTS,
             KING_SPADES, FOUR_CLUBS, SIX_DIAMONDS, TWO_CLUBS);
-}
+    /**
+	 * correct string representation of card
+	 */
+    public static final String CARD_AS_STRING = "ACE of HEARTS";
+    
+    /**
+   	 * test input for bad string representation of card
+   	 */
+    public static final String [] CARD_STRINGS_BAD = {"ACEofHEARTS", "ACE of HEART", null, "null of null"};
+   
+    /**
+   	 * Scoreline string in game save data file
+   	 */
+    public static final String PLAYER_SCORE = "Player score: ";
+    }

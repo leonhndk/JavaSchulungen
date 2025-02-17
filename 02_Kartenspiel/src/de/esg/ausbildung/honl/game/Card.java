@@ -39,5 +39,20 @@ public class Card {
     public String toString() {
         return normalizeString(rank + " of " + suit);
     }
+    
+    @Override 
+    public boolean equals(Object obj) {
+    	if (obj == this) {
+    		return true;
+    	}
+    	if (!(obj instanceof Card)) {
+    		return false;
+    	}
+    	Card card = (Card) obj;
+    	if (card.suit == null || card.rank == null) {
+    		return false;
+    	}
+    	return suit == card.suit && rank == card.rank;
+    }
 
 }

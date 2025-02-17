@@ -13,7 +13,7 @@ class CardTest {
      */
     @Test
     void getCardValueTest() {
-    	for (Card card : TestConstants.inputCards) {
+    	for (Card card : TestConstants.INPUT_CARDS) {
     		assertEquals(card.getRank().getCardValue(), card.getCardValue());
     	}
     }

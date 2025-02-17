@@ -7,17 +7,18 @@ public class SimpleGame {
     private Player player;
     private Player dealer;
     private Deck deck;
+    private int numberOfDecks;
     private int dealerWins;
     private int playerWins;
     public boolean gameFinished;
 
 
-    public SimpleGame() {
-//        this.deck = new Deck(2);
+    public SimpleGame(int numberOfDecks) {
         dealerWins = 0;
         playerWins = 0;
         this.player = new Player();
         this.dealer = new Player();
+        this.numberOfDecks = numberOfDecks;
     }
 
     /**
@@ -72,16 +73,18 @@ public class SimpleGame {
     }
 
     /**
-     * resets hands of dealer and player and starts round with a shuffled deck
-     * checks for bust after each turn, in case of bust increments overall score of other player,
-     * terminates round
-     * round is terminted if dealer decides to stand and score evaluated with checkWinner
+     * reset hands of dealer and player and starts round with a shuffled deck
+     * checks for bust after each turn, in case of bust increments overall score of other player;
+     * round is terminated if dealer decides to stand and score evaluated with checkWinner
      */
     private void playRound() {
         player.resetHand();
         dealer.resetHand();
-        deck.resetDeck();
-        deck.shuffleDeck();
+        if(deck.getDeckSize() < 10) {
+            deck.resetDeck(numberOfDecks);
+            deck.shuffleDeck();
+            System.out.println("Card stack depleted, resetting deck...");
+        }
         initialDeal();
         while (true) {
             playerTurn();
@@ -103,6 +106,7 @@ public class SimpleGame {
             }
         }
     }
+    
     /**
      * evaluate winner in case of neither player nor dealer going bust and allocate points
      */
@@ -128,27 +132,38 @@ public class SimpleGame {
      * contains logic to play multiple rounds and tallies score
      * allows player to decide to continue or quit after each round
      */
-    public void playGame(int numOfDecks) {
-    	System.out.println("Saved game available. Would you like to load the saved game state?");
-    	boolean loadGame = Utils.promptInput();
-    	if (loadGame) {
-    		playerWins = Utils.loadScore()[0];
-    		dealerWins = Utils.loadScore()[1];
-    	}
-    	else {
-    		playerWins = 0;
-    		dealerWins = 0;
-    		this.deck = new Deck(numOfDecks);
-    	}
-  
+    public void playGame() {
+        boolean loadGame = false;
+        // check for existence of directory, prompt user to load save or start new game
+        if(Utils.gameSaveExists()) {
+            System.out.println("Saved game available. Would you like to load the saved game state?");
+            loadGame = Utils.promptInput();
+        }
+        if (loadGame) {
+            int [] scores = Utils.loadScore();
+            playerWins = scores[0];
+            dealerWins = scores[1];
+            // read stack of cards from save and assign it to deck 
+            this.deck = Utils.loadCardStack();
+            System.out.println("Successfully loaded game save. Current scoreline: Player wins: " + playerWins
+            + "\tDealer wins: " + dealerWins);
+        }
+        // if user chooses to start anew, reset round wins and supply fresh stack of cards
+        else {
+            playerWins = 0;
+            dealerWins = 0;
+            this.deck = new Deck(numberOfDecks);
+        }
+        // play rounds until user decides to quit
         while (!gameFinished) {
             playRound();
             System.out.println("Current overall score: \tPlayer: " + playerWins + "\tDealer: " + dealerWins);
             System.out.println("Would you like to play another round?\n(Y)es to keep playing\n(N)o to quit");
             gameFinished = !Utils.promptInput();
         }
-        System.out.println("Final score: \nPlayer: " + playerWins + "\tDealer: " + dealerWins);
-        System.out.println("Thank you for playing");
+        // print final score and save game state
+        System.out.println("Final score: \tPlayer: " + playerWins + "\tDealer: " + dealerWins);
+        System.out.println("Thank you for playing!");
         Utils.saveGame(playerWins, dealerWins, deck);
         Utils.closeScanner();
     }

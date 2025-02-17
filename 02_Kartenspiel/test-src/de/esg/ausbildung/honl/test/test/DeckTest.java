@@ -26,7 +26,7 @@ class DeckTest {
         // draw a card thus removing it from the deck
         deck.drawCard();
         // call resetDeck to repopulate deck
-        deck.resetDeck();
+        deck.resetDeck(2);
         // card should be in the deck again
         assertEquals(104, deck.getDeck().size());
     }
