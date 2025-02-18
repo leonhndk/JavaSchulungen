@@ -16,7 +16,7 @@ import de.esg.ausbildung.honl.game.Card;
 import de.esg.ausbildung.honl.game.Deck;
 import de.esg.ausbildung.honl.game.Utils;
 
-class SaveGameTest extends TestInit {
+class SaveGameTest {
 
 	@Before
 	void deleteFile() {
