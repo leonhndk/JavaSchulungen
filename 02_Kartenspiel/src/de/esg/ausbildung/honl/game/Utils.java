@@ -3,7 +3,6 @@ package de.esg.ausbildung.honl.game;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,13 +10,9 @@ import java.util.Scanner;
  * Utilities for user input prompts and saving/loading a game
  */
 public class Utils {
-	private static String userHome = System.getProperty("user.home");
-	private static String dir = userHome + File.separator + "JavaJack";
-	private static Path directoryPath = Paths.get(dir);
+	
 	private static Scanner scanner = new Scanner(System.in);
-	private static final String FILE_NAME = "Kartenspiel.csv";
-	private static Path filePath = Paths.get(dir, FILE_NAME);
-
+	
 	/**
 	 * universal method to prompt yes or no user input
 	 *
@@ -48,7 +43,7 @@ public class Utils {
 	 * @param deck
 	 * @return card
 	 */
-	private static ArrayList<String> saveCurrentStack(Deck deck) {
+	public static ArrayList<String> saveCurrentStack(Deck deck) {
 		ArrayList<String> cardStack = new ArrayList<String>();
 		while (deck.getDeckSize() > 0) {
 			Card card = deck.drawCard();
@@ -58,18 +53,18 @@ public class Utils {
 	}
 
 	public static boolean gameSaveExists() {
-		return Files.exists(filePath);
+		return Files.exists(Constants.filePath);
 	}
 
 	
-	// umbau zum testen --> Pfade, Dateinamen als Parameter übergeben statt Klassenvariablen, 
 	/**
 	 * create directory under user files to write save data to while checking
 	 * existence thereof first
+	 * @param dirPath TODO
 	 *
 	 * @return String
 	 */
-	public static String createAndGetDirectory() {
+	public static String createAndGetDirectory(Path directoryPath) {
 		if (!Files.exists(directoryPath)) {
 			try {
 				Files.createDirectory(directoryPath);
@@ -78,7 +73,7 @@ public class Utils {
 				return null;
 			}
 		}
-		return dir;
+		return directoryPath.toString();
 	}
 
 	/**
@@ -87,10 +82,11 @@ public class Utils {
 	 * @param playerScore
 	 * @param dealerScore
 	 * @param deck
+	 * @param dirPath 
 	 */
-	public static void saveGame(int playerScore, int dealerScore, Deck deck) {
+	public static void saveGame(int playerScore, int dealerScore, Deck deck, String fileName) {
 		try {
-			FileWriter writer = new FileWriter(createAndGetDirectory() + File.separator + FILE_NAME);
+			FileWriter writer = new FileWriter(fileName);
 			writer.write("Player score: " + playerScore + "\n");
 			writer.write("Dealer score: " + dealerScore + "\n");
 			for (String card : saveCurrentStack(deck)) {
@@ -100,7 +96,7 @@ public class Utils {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Game state saved at following location: " + dir);
+		
 	}
 
 	/**
@@ -108,7 +104,7 @@ public class Utils {
 	 *
 	 * @return saved player and dealer score as int array
 	 */
-	public static int[] loadScore() {
+	public static int[] loadScore(Path filePath) {
 		String playerLine;
 		String dealerLine;
 		try {
@@ -131,7 +127,7 @@ public class Utils {
 	 * @return card object
 	 */
 	public static Card readCard(String string) {
-		if (string == null) {
+		if (string == null || string.isEmpty()) {
 			return null;
 		}
 		// split card string along whitespace e.g. THREE | of | CLUBS
@@ -165,7 +161,7 @@ public class Utils {
 	 * 
 	 * @return ArrayList
 	 */
-	public static Deck loadCardStack() {
+	public static Deck loadCardStack(Path filePath) {
 		String line;
 		ArrayList<Card> cardStack = new ArrayList<>();
 		try {

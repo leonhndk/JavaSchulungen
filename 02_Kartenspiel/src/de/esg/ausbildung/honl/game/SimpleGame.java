@@ -82,9 +82,9 @@ public class SimpleGame {
         dealer.resetHand();
         if(deck.getDeckSize() < 10) {
             deck.resetDeck(numberOfDecks);
-            deck.shuffleDeck();
             System.out.println("Card stack depleted, resetting deck...");
         }
+        deck.shuffleDeck();
         initialDeal();
         while (true) {
             playerTurn();
@@ -140,11 +140,11 @@ public class SimpleGame {
             loadGame = Utils.promptInput();
         }
         if (loadGame) {
-            int [] scores = Utils.loadScore();
+            int [] scores = Utils.loadScore(Constants.filePath);
             playerWins = scores[0];
             dealerWins = scores[1];
             // read stack of cards from save and assign it to deck 
-            this.deck = Utils.loadCardStack();
+            this.deck = Utils.loadCardStack(Constants.filePath);
             System.out.println("Successfully loaded game save. Current scoreline: Player wins: " + playerWins
             + "\tDealer wins: " + dealerWins);
         }
@@ -164,7 +164,8 @@ public class SimpleGame {
         // print final score and save game state
         System.out.println("Final score: \tPlayer: " + playerWins + "\tDealer: " + dealerWins);
         System.out.println("Thank you for playing!");
-        Utils.saveGame(playerWins, dealerWins, deck);
+        Utils.saveGame(playerWins, dealerWins, deck, Constants.FILE_PATH_SAFE);
+        System.out.println("Game state saved successfully at following location: " + Constants.FILE_PATH_SAFE);
         Utils.closeScanner();
     }
 }
