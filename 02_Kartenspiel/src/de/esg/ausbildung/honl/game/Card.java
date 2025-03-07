@@ -21,23 +21,24 @@ public class Card {
         return rank;
     }
 
-    /**
-     * @param cardDescription returns a string that is exactly 19 characters long by adding whitespace if needed
-     */
-    private String normalizeString(String cardDescription) {
-        if (cardDescription.length() > 19) {
-            return null;
-        }
-        StringBuilder normalizedDescription = new StringBuilder(cardDescription);
-        while (normalizedDescription.length() < 19) {
-            normalizedDescription.append(" ");
-        }
-        return normalizedDescription.toString();
-    }
+//    /**
+//     * @param cardDescription returns a string that is exactly 19 characters long by adding whitespace if needed
+//     */
+//    private String normalizeString(String cardDescription) {
+//        if (cardDescription.length() > 19) {
+//            return null;
+//        }
+//        StringBuilder normalizedDescription = new StringBuilder(cardDescription);
+//        while (normalizedDescription.length() < 19) {
+//            normalizedDescription.append(" ");
+//        }
+//        return normalizedDescription.toString();
+//    }
 
     @Override
     public String toString() {
-        return normalizeString(rank + " of " + suit);
+    	String suitIcon = suit.getIconColor() + suit.getIcon() + "\u001B[0m";
+        return suitIcon + rank.getLabel() + "\t";
     }
 
 }

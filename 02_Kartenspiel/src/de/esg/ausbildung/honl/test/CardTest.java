@@ -1,4 +1,4 @@
-package de.esg.ausbildung.honl.test.test;
+package de.esg.ausbildung.honl.test;
 
 import de.esg.ausbildung.honl.game.*;
 
