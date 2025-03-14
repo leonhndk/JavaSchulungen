@@ -43,6 +43,13 @@ public class Player {
     public boolean isBust() {
         return getHandValue() > 21;
     }
+    
+    public void doubleAce() {
+		if(hand.get(0).getRank() == Rank.ACE && hand.get(1).getRank() == Rank.ACE) {
+			hand.remove(1);
+			hand.add(new Card(Rank.SOFT_ACE, Suit.SPADES));
+		}
+    }
 
     /**
      * method to check for blackjack after inital deal

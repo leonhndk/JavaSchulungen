@@ -24,11 +24,17 @@ public class SimpleGame {
      * deals first to cards without evaluation for bust
      */
     private void initialDeal() {
-        System.out.println("Initial Deal...");
-        player.addCard(deck.drawCard());
-        System.out.println("Your initial hand:");
+        System.out.println("Initial Deal with two cards each...");
+        for (int i = 0; i < 2; i++) {
+        	System.out.println("\nDealing card to player");
+        	player.addCard(deck.drawCard());
+        	player.printHand();
+        	System.out.println("\nDealing card to dealer");
+        	dealer.addCard(deck.drawCard());
+        	dealer.printHand();
+        }
+        System.out.println("\nYour initial hand:");
         player.printHand();
-        dealer.addCard(deck.drawCard());
         System.out.println("\nDealer's initial hand:");
         dealer.printHand();
     }
@@ -37,18 +43,24 @@ public class SimpleGame {
      * prints game flow statements and prompts user to draw another card or stand
      */
     private void playerTurn() {
-
         System.out.println("\nPlayer's turn...\nYour current hand:");
         player.printHand();
-        System.out.println("\nWould you like to draw another card?\n(Y)es to hit\n(N)o to stand");
-        // ask player whether to hit or stand and print hand
-        if (Utils.promptInput()) {
-            System.out.print("Player draws a card...\t");
-            player.addCard(deck.drawCard());
-            System.out.println("Your new hand:");
-            player.printHand();
-        } else {
-            System.out.println("Player decides to stand");
+        if (player.getHandValue() >= 17) {
+			System.out.println("\nWould you like to draw another card?\n(Y)es to hit\n(N)o to stand");
+			// ask player whether to hit or stand and print hand
+			if (Utils.promptInput()) {
+				System.out.print("Player draws a card...\t");
+				player.addCard(deck.drawCard());
+				System.out.println("Your new hand:");
+				player.printHand();
+			} else {
+				System.out.println("Player decides to stand");
+			} 
+		}
+        else {
+			System.out.print("Player draws a card...\t");
+			player.addCard(deck.drawCard());
+			System.out.println("Your new hand:");
         }
     }
 

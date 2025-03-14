@@ -16,6 +16,9 @@ public class Deck {
             for (Rank rank : Rank.values()) {
                 for (Suit suit : Suit.values()) {
                     Card card = new Card(rank, suit);
+                    if(card.getCardValue() == 1) {
+                    	continue;
+                    }
                     deck.add(card);
                 }
             }
