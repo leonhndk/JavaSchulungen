@@ -25,7 +25,7 @@ public class SimpleGame {
      * deals first to cards without evaluation for bust
      */
     private void initialDeal() {
-        System.out.println("Initial Deal with two cards each...");
+        System.out.println("Initial deal with two cards each...");
         for (int i = 0; i < 2; i++) {
         	System.out.println("\nDealing card to player");
         	player.addCard(deck.drawCard());
@@ -50,7 +50,7 @@ public class SimpleGame {
 			System.out.println("\nWould you like to draw another card?\n(Y)es to hit\n(N)o to stand");
 			// ask player whether to hit or stand and print hand
 			if (Utils.promptInput()) {
-				System.out.print("Player draws a card...\t");
+				System.out.println("Player draws a card...\t");
 				player.addCard(deck.drawCard());
 				System.out.println("Your new hand:");
 				player.printHand();
@@ -59,9 +59,10 @@ public class SimpleGame {
 			} 
 		}
         else {
-			System.out.print("Player draws a card...\t");
+			System.out.println("\nPlayer draws a card...");
 			player.addCard(deck.drawCard());
-			System.out.println("Your new hand:");
+			System.out.println("\nYour new hand:");
+			player.printHand();
         }
     }
 
@@ -92,12 +93,14 @@ public class SimpleGame {
     private void playRound() {
         player.resetHand();
         dealer.resetHand();
-        if(deck.getDeckSize() < 10) {
+        if(deck.getDeckSize() < numberOfDecks * 52 * 0.2) {
             deck.resetDeck(numberOfDecks);
             System.out.println("Card stack depleted, resetting deck...");
         }
         deck.shuffleDeck();
         initialDeal();
+        player.doubleAce();
+        dealer.doubleAce();
         while (true) {
             playerTurn();
             if (player.isBust()) {

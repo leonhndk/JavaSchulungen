@@ -4,15 +4,12 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-
-import javax.sound.midi.Track;
 
 /**
  * Utilities for user input prompts and saving/loading a game
  */
-public class Utils {
+public class UtilsOld {
 	
 	private static Scanner scanner = new Scanner(System.in);
 	
@@ -102,46 +99,26 @@ public class Utils {
 		
 	}
 
-	public static List<String> loadSave(Path filePath)	{
-		ArrayList <String> gameSave = new ArrayList<String>();
-		String line;
-		try (BufferedReader reader = new BufferedReader(new FileReader(filePath.toString()));) {
-			while ((line = reader.readLine()) != null) {
-				gameSave.add(line);
-			}
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return gameSave;
-	}
-	
 	/**
 	 * load dealer and player score from save
 	 *
 	 * @return saved player and dealer score as int array
 	 */
-	public static int[] readScore(List<String> gameSave) {
-		String playerLine = gameSave.get(0);
-		String dealerLine = gameSave.get(1);
-//		try {
-//			BufferedReader reader = new BufferedReader(new FileReader(filePath.toString()));
-//			playerLine = reader.readLine();
-//			dealerLine = reader.readLine();
-//			reader.close();
-//		} catch (IOException | NumberFormatException e) {
-//			e.printStackTrace();
-//			return null;
-//		}
+	public static int[] loadScore(Path filePath) {
+		String playerLine;
+		String dealerLine;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(filePath.toString()));
+			playerLine = reader.readLine();
+			dealerLine = reader.readLine();
+			reader.close();
+		} catch (IOException | NumberFormatException e) {
+			e.printStackTrace();
+			return null;
+		}
 		int playerScore = Integer.parseInt(playerLine.substring(14).trim());
 		int dealerScore = Integer.parseInt(dealerLine.substring(14).trim());
 		return new int[] { playerScore, dealerScore };
-	}
-	
-	
-	public static List<String> checkSaveData() {
-		return null;
 	}
 
 	/**

@@ -21,8 +21,6 @@ public class Deck {
         }
     }
 
-
-
     /**
      * resets the deck and calls method to build deck
      */
@@ -38,7 +36,10 @@ public class Deck {
         for (Rank rank : Rank.values()) {
             for (Suit suit : Suit.values()) {
                 Card card = new Card(rank, suit);
-                deck.add(card);
+                // soft ace (value = 1) should not be in deck 
+                if (card.getCardValue() != 1) {
+                	deck.add(card);
+                }
             }
         }
         return deck;

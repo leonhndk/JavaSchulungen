@@ -41,6 +41,10 @@ public class Card {
         return suitIcon + rank.getLabel() + "\t";
     }
     
+    public String saveString() {
+    	return rank.name() + " " + suit.name();
+    }
+    
     @Override 
     public boolean equals(Object obj) {
     	if (obj == this) {
