@@ -2,45 +2,48 @@ package de.esg.ausbildung.honl.game;
 
 import java.util.*;
 
+/**
+ * logic to create deck of cards
+ * stack of cards from which cards are dealt is also represented as an object of type Deck (one or more decks in stack)
+ */
 public class Deck {
 
     private ArrayList<Card> deck;
 
     /**
      * @param numberOfDecks: allows for multiple decks of cards in one playing deck,
-     *                       option to shuffle
      */
     public Deck(int numberOfDecks) {
         this.deck = new ArrayList<Card>();
         while (numberOfDecks > 0) {
-            for (Rank rank : Rank.values()) {
-                for (Suit suit : Suit.values()) {
-                    Card card = new Card(rank, suit);
-                    if(card.getCardValue() == 1) {
-                    	continue;
-                    }
-                    deck.add(card);
-                }
-            }
+           buildDeck();
+           numberOfDecks--;
+        }
+    }
+
+
+
+    /**
+     * resets the deck and calls method to build deck
+     */
+    public void resetDeck(int numberOfDecks) {
+        deck.clear();
+        while (numberOfDecks > 0) {
+            buildDeck();
             numberOfDecks--;
         }
     }
 
-
-    /**
-     * resets the deck and calls method to build another deck
-     */
-    public void resetDeck() {
-        deck.clear();
+    public ArrayList<Card> buildDeck() {
         for (Rank rank : Rank.values()) {
             for (Suit suit : Suit.values()) {
                 Card card = new Card(rank, suit);
                 deck.add(card);
-                deck.add(card);
             }
         }
+        return deck;
     }
-
+    
     public void shuffleDeck() {
         Collections.shuffle(deck);
     }
@@ -71,12 +74,12 @@ public class Deck {
         }
     }
 
+    public int getDeckSize() {
+        return deck.size();
+    }
 
 	public ArrayList<Card> getDeck() {
 		return deck;
 	}
 
-    
-    
-    
 }
