@@ -7,8 +7,8 @@ import java.util.List;
 
 import de.esg.ausbildung.honl.game.Card;
 import de.esg.ausbildung.honl.game.Rank;
+import de.esg.ausbildung.honl.game.SaveUtils;
 import de.esg.ausbildung.honl.game.Suit;
-import de.esg.ausbildung.honl.game.Utils;
 
 public class TestConstants {
 
@@ -32,7 +32,7 @@ public class TestConstants {
 	public static final String[] CARD_STRINGS_BAD = { "ACEofHEARTS", "ACE of HEART", null, "null of null" };
 	static final String TEST_DIRECTORY = System.getProperty("user.home") + File.separator + "KartenspielTest";
 	static final String TEST_FILE_NAME = "KartenspielTest.csv";
-	static final String SAVE_FILE = Utils.createAndGetDirectory(Paths.get(TEST_DIRECTORY)) + File.separator
+	static final String SAVE_FILE = SaveUtils.createAndGetDirectory(Paths.get(TEST_DIRECTORY)) + File.separator
 			+ "SaveTest.csv";
 	static final Path TEST_FILE_PATH = Paths.get(TEST_DIRECTORY, TEST_FILE_NAME);
 	static final Path SAVE_TEST_PATH = Paths.get(TEST_DIRECTORY, "SaveTest.csv");

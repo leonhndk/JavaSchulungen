@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import de.esg.ausbildung.honl.game.Card;
 import de.esg.ausbildung.honl.game.Deck;
-import de.esg.ausbildung.honl.game.Utils;
+import de.esg.ausbildung.honl.game.SaveUtils;
 
 class SaveGameTest {
 
@@ -34,7 +34,7 @@ class SaveGameTest {
 	@Test
 	void saveStackTest() {
 		testDeck.getDeck().addAll(TestConstants.INPUT_CARDS);
-		ArrayList<String> cardStack = Utils.saveCurrentStack(testDeck);
+		ArrayList<String> cardStack = SaveUtils.saveCurrentStack(testDeck);
 		int i = 0;
 		for (Card testCard : testDeck.getDeck()) {
 			assertEquals(testCard.toString(), cardStack.get(i));
@@ -50,7 +50,7 @@ class SaveGameTest {
 		String playerLine = "";
 		String dealerLine = "";
 		testDeck.getDeck().addAll(TestConstants.INPUT_CARDS);
-		Utils.saveGame(TestConstants.PLAYER_SCORE, TestConstants.DEALER_SCORE, testDeck, TestConstants.SAVE_FILE);
+		SaveUtils.saveGame(TestConstants.PLAYER_SCORE, TestConstants.DEALER_SCORE, testDeck, TestConstants.SAVE_FILE);
 		assertTrue(Files.exists(TestConstants.TEST_FILE_PATH));
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(TestConstants.TEST_FILE_PATH.toString()));

@@ -19,6 +19,7 @@ public class SimpleGame {
         this.player = new Player();
         this.dealer = new Player();
         this.numberOfDecks = numberOfDecks;
+        this.deck = new Deck(0);
     }
 
     /**
@@ -150,16 +151,20 @@ public class SimpleGame {
     public void playGame() {
         boolean loadGame = false;
         // check for existence of directory, prompt user to load save or start new game
-        if(Utils.gameSaveExists()) {
+        if(SaveUtils.gameSaveExists()) {
             System.out.println("Saved game available. Would you like to load the saved game state?");
             loadGame = Utils.promptInput();
         }
         if (loadGame) {
-            int [] scores = Utils.loadScore(Constants.filePath);
+        	SaveData saveData = SaveUtils.loadSavedGame(Constants.filePath);
+            int [] scores = saveData.score();
             playerWins = scores[0];
             dealerWins = scores[1];
             // read stack of cards from save and assign it to deck 
-            this.deck = Utils.loadCardStack(Constants.filePath);
+            deck = new Deck(0);
+            System.out.println(deck.getDeck());
+            deck.getDeck().addAll(saveData.cardStack());
+            System.out.println(deck.toString());
             System.out.println("Successfully loaded game save. Current scoreline: Player wins: " + playerWins
             + "\tDealer wins: " + dealerWins);
         }
@@ -179,7 +184,7 @@ public class SimpleGame {
         // print final score and save game state
         System.out.println("Final score: \tPlayer: " + playerWins + "\tDealer: " + dealerWins);
         System.out.println("Thank you for playing!");
-        Utils.saveGame(playerWins, dealerWins, deck, Constants.FILE_PATH_SAFE);
+        SaveUtils.saveGame(playerWins, dealerWins, deck, Constants.FILE_PATH_SAFE);
         System.out.println("Game state saved successfully at following location: " + Constants.FILE_PATH_SAFE);
         Utils.closeScanner();
     }

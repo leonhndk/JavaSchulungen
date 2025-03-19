@@ -42,7 +42,7 @@ public class Card {
     }
     
     public String saveString() {
-    	return rank.name() + " " + suit.name();
+    	return rank.name() + " of " + suit.name();
     }
     
     @Override 
