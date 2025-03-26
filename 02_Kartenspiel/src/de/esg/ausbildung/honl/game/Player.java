@@ -1,12 +1,19 @@
 package de.esg.ausbildung.honl.game;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 
 public class Player {
 
     private List<Card> hand;
+    private double balance;
+    private NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+	private DecimalFormat df = new DecimalFormat("#,##");
 
     /**
      * constructor for players (dealer is also a player)
@@ -105,4 +112,26 @@ public class Player {
     public List<Card> getHand() {
         return hand;
     }
+	public Double getBalance() {
+		return balance;
+	}
+
+	public void setBalance(Double balance) {
+		this.balance = balance;
+	}
+
+	public void charge(double d) {
+		if (balance - d < 0) {
+			System.out.println("Wager exceeds balance, continuing with wager of 0,00 € !");
+		} else {
+			balance -= d;
+		}
+	}
+
+	public void printBalance() {
+
+		nf.setRoundingMode(RoundingMode.DOWN);
+		String balance = nf.format(this.balance);
+		System.out.println("Your balance is: " + balance);
+	}
 }

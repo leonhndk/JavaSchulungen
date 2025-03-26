@@ -10,7 +10,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SaveUtils {
-
+	
+	public static SaveData loadSavedGame(Path filePath) {
+		ArrayList<String> savedGame = readSaveData(filePath);
+		ArrayList<Card> cardStack;
+		int [] scores = new int [2];
+		// if validation fails print error message and return null 
+		if (!validateSaveData(savedGame)) {
+			System.out.println("Save file has been corrupted! Proceeding with a new game...");
+			return null;
+		}
+		else {
+			double balance = readBalance(savedGame);
+			scores = readScore(savedGame);
+			cardStack = loadCardStack(savedGame);
+			return new SaveData(balance, scores, cardStack);
+		}
+	}
+	
+	public static Double readBalance (ArrayList<String> gameSave) {
+		String line = gameSave.get(0).substring(14);
+		String [] balance = line.trim().split("\\s");
+		try {
+			return Double.parseDouble(balance[0]);
+		}
+		catch (NumberFormatException nfe) {
+			nfe.printStackTrace();
+			return 0.00;
+		}
+	}
+	
 	/**
 	 * load last saved card stack
 	 * 
@@ -18,9 +47,8 @@ public class SaveUtils {
 	 */
 	public static ArrayList<Card> loadCardStack(List<String> gameSave) {
 		ArrayList<Card> cardStack = new ArrayList<>();
-		if (validateSaveData(gameSave, "[A-Z]+ of [A-Z]+", false)) {
-			for (String cardStr : gameSave) {
-				Card card = readCard(cardStr);
+			for (int i = 3; i < gameSave.size(); i++) {
+				Card card = readCard(gameSave.get(i));
 				if (card != null) {
 					cardStack.add(card);
 				}
@@ -29,7 +57,6 @@ public class SaveUtils {
 //			deck.getDeck().addAll(cardStack);
 //			return deck;
 			return cardStack;
-		} else return null;
 	}
 
 	/**
@@ -45,7 +72,7 @@ public class SaveUtils {
 			return null;
 		}
 		String rankStr = arr[0];
-		String suitStr = arr[1];
+		String suitStr = arr[2];
 		Rank rankComp = null;
 		Suit suitComp = null;
 		for (Rank rank : Rank.values()) {
@@ -70,12 +97,11 @@ public class SaveUtils {
 	 * @param gameSave
 	 * @return saved player and dealer score as int array
 	 */
-	public static int[] readScore(List<String> gameSave) {
+	public static int[] readScore(ArrayList<String> gameSave) {
 		int playerScore = 0;
 		int dealerScore = 0;
-		if (validateSaveData(gameSave, ".*score:\\s\\d+", true)) {
-			String player = gameSave.get(0).substring(14);
-			String dealer = gameSave.get(1).substring(14);
+			String player = gameSave.get(1).substring(14);
+			String dealer = gameSave.get(2).substring(14);
 			try {
 				playerScore = Integer.parseInt(player.trim());
 				dealerScore = Integer.parseInt(dealer.trim());
@@ -84,60 +110,37 @@ public class SaveUtils {
 				e.printStackTrace();
 				return null;
 			}
-		}
 		return new int[] { playerScore, dealerScore };
 	}
 
 	/**
 	 * check for uncorrupted save game file
 	 * 
-	 * @param score true when validating score, false when validating card stack
 	 * @param List  gameSave read from the file
-	 * @paran String pattern: the pattern of the first two lines to validate against
-	 * @return gameSave if validation successful
+	 * @return boolean
 	 */
-	public static boolean validateSaveData(List<String> gameSave, String pattern, boolean score) {
-		int size = gameSave.size();
-		if (score) {
-			if (gameSave.get(0).matches(pattern) && gameSave.get(1).matches(pattern)) {
-				return true;
-			} else
-				return false;
-		} else {
-			for (int i = 2; i < size; i++) {
-				if (!gameSave.get(i).matches(pattern)) {
-					return false;
-				}
-			}
-			return true;
+	public static boolean validateSaveData(ArrayList<String> gameSave) {
+		boolean scoreMatches = false;
+		boolean stackMatches = true;
+		boolean balanceMatches = true;
+		// match pattern for saved scoreline 
+		if (gameSave.get(1).matches(".*score:\\s\\d+") && gameSave.get(2).matches(".*score:\\s\\d+")) {
+			scoreMatches = true;
 		}
+		// match pattern for saved card stack
+		for (int i = 3; i < gameSave.size(); i++) {
+			if (!gameSave.get(i).matches("[A-Z]+ of [A-Z]+")) {
+				System.out.println("Error when reading card stack!");
+				stackMatches = false;
+			}
+		}
+		// lastly match saved balance and return true if everything matches 
+		if (!gameSave.get(0).matches("Your Balance:\\s\\d+\\.\\d{1,2}\\s€")) {
+			balanceMatches = false; 
+			System.out.println("Error when reading remaining balance!");
+		}
+		return scoreMatches && stackMatches && balanceMatches;
 	}
-
-//	/**
-//	 * check for uncorrupted save game file
-//	 * 
-//	 * @param score true when validating score, false when validating card stack
-//	 * @param List  gameSave read from the file
-//	 * @paran String pattern: the pattern of the first two lines to validate against
-//	 * @return gameSave if validation successful
-//	 */
-//	public static boolean validateSaveData(List<String> gameSave, String pattern, boolean score) {
-//		int size = gameSave.size();
-//		if (score) {
-//			if (gameSave.get(0).matches(pattern) && gameSave.get(1).matches(pattern)) {
-//				return gameSave.subList(0, 2);
-//			} else
-//				return null;
-//		} else {
-//			for (int i = 2; i < size; i++) {
-//				if (!gameSave.get(i).matches(pattern)) {
-//					System.out.println("Error! Saved card stack has been corrupted.");
-//					return null;
-//				}
-//			}
-//			return gameSave.subList(2, size - 1);
-//		}
-//	}
 
 	public static ArrayList<String> readSaveData (Path filePath) {
 		ArrayList<String> gameSave = new ArrayList<String>();
@@ -153,13 +156,6 @@ public class SaveUtils {
 		return gameSave;
 	}
 	
-	public static SaveData loadSavedGame (Path filePath) {
-		ArrayList<String> gameSave = readSaveData(filePath);
-		int [] scores = readScore(gameSave);
-		ArrayList<Card> cardStack = loadCardStack(gameSave);
-		return new SaveData(scores, cardStack);
-		}
-
 	/**
 	 *
 	 * @param deck
@@ -206,9 +202,10 @@ public class SaveUtils {
 	 * @param deck
 	 * @param dirPath
 	 */
-	public static void saveGame(int playerScore, int dealerScore, Deck deck, String fileName) {
+	public static void saveGame(int playerScore, int dealerScore, double balance, Deck deck, String fileName) {
 		try {
 			FileWriter writer = new FileWriter(fileName);
+			writer.write("Your Balance: " + balance + " €\n");
 			writer.write("Player score: " + playerScore + "\n");
 			writer.write("Dealer score: " + dealerScore + "\n");
 			for (String card : saveCurrentStack(deck)) {
