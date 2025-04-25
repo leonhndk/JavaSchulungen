@@ -101,6 +101,7 @@ public class Player {
      * overloaded method to print only one card at index instead of full hand
      * used to show one of the dealer's cards during initial deal
      */
+    // possibly print hand after drawing card
     public void printHand(int index) {
         Card card = hand.get(index);
         System.out.println(card);
