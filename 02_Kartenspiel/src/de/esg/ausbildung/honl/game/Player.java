@@ -1,7 +1,6 @@
 package de.esg.ausbildung.honl.game;
 
 import java.math.RoundingMode;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +10,8 @@ import java.util.Locale;
 public class Player {
 
     private List<Card> hand;
-    private double balance;
-    private NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.GERMANY);
-	private DecimalFormat df = new DecimalFormat("#,##");
+    private int balance;
+
 
     /**
      * constructor for players (dealer is also a player)
@@ -112,26 +110,49 @@ public class Player {
     public List<Card> getHand() {
         return hand;
     }
-	public Double getBalance() {
+	public int getBalance() {
 		return balance;
 	}
 
-	public void setBalance(Double balance) {
+	public void setBalance(int balance) {
 		this.balance = balance;
 	}
 
-	public void charge(double d) {
+	public void charge(int d) {
 		if (balance - d < 0) {
 			System.out.println("Wager exceeds balance, continuing with wager of 0,00 € !");
 		} else {
 			balance -= d;
+            //System.out.println("Processed bet of " + nf.format(d));
+            //printBalance();
 		}
 	}
 
-	public void printBalance() {
+    public int makeBet (int amount) {
+        boolean validBet = false;
+        while(!validBet) {
+            if (amount > balance) {
+                System.out.println("Bet exceeds your balance!");
+                printBalance();
+            }
+            else {
+                validBet = true;
+            }
+        }
+        balance -= amount;
+        System.out.println("Bet of " + formatCurrency(amount) + " placed.");
+        printBalance();
+        return amount;
+    }
 
-		nf.setRoundingMode(RoundingMode.DOWN);
-		String balance = nf.format(this.balance);
-		System.out.println("Your balance is: " + balance);
-	}
+    public void printBalance() {
+        System.out.println("Your balance is: " + formatCurrency(this.balance));
+    }
+
+    public String formatCurrency(int amount) {
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+        nf.setRoundingMode(RoundingMode.DOWN);
+        return nf.format(amount / 100.0);
+    }
+
 }

@@ -27,23 +27,31 @@ public class Utils {
 		return false;
 	}
 
-	public static double promptBet() {
+	public static int promptBet() {
 		double bet = 0;
-		System.out.println("Please specify amount you wish to bet (Maximum bet: 2,00€).");
+		System.out.println("Please specify amount you wish to bet (Maximum bet: 2,00 €).");
 		while (scanner.hasNext()) {
 			String input = scanner.next();
-			try {
-				bet = Math.round(Double.parseDouble(input) * 100.0) / 100;
-				if (bet > 2.00) {
-					System.out.println("Amount too high, continuing with maximum bet");
-					bet = 2.00;
-				}
-				return bet;
-			} catch (NumberFormatException nfe) {
+			if(!validateInput(input)) {
 				System.out.println("Invalid input! Please enter only the amount in the following format: x.xx");
+				continue;
+			}
+			try {
+				bet = Double.parseDouble(input);
+				if (bet > 2.00) {
+					System.out.println("Amount exceeds maximum bet. Continuing with bet of 2,00 €.");
+					return 200;
+				}
+				return (int) (bet * 100);
+			} catch (NumberFormatException nfe) {
+				System.out.println("Invalid input! Please enter only the amount in the following format: x,xx");
 			}
 		}
-		return bet;
+		return (int) bet * 100;
+	}
+
+	public static boolean validateInput (String input) {
+		return input.trim().matches("\\d(\\.\\d{1,2})?");
 	}
 
 	/**

@@ -21,10 +21,10 @@ public class SaveUtils {
 			return null;
 		}
 		else {
-			double balance = readBalance(savedGame);
+			double balance = readBalance(savedGame) * 100;
 			scores = readScore(savedGame);
 			cardStack = loadCardStack(savedGame);
-			return new SaveData(balance, scores, cardStack);
+			return new SaveData((int) balance, scores, cardStack);
 		}
 	}
 	
@@ -143,7 +143,7 @@ public class SaveUtils {
 	}
 
 	public static ArrayList<String> readSaveData (Path filePath) {
-		ArrayList<String> gameSave = new ArrayList<String>();
+		ArrayList<String> gameSave = new ArrayList<>();
 		String line;
 		try (BufferedReader reader = new BufferedReader(new FileReader(filePath.toString()));) {
 			while ((line = reader.readLine()) != null) {
@@ -178,7 +178,7 @@ public class SaveUtils {
 	 * create directory under user files to write save data to while checking
 	 * existence thereof first
 	 * 
-	 * @param dirPath TODO
+	 * @param directoryPath
 	 *
 	 * @return String
 	 */

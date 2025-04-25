@@ -1,6 +1,7 @@
 package de.esg.ausbildung.honl.game;
 
 import java.io.File;
+import java.math.RoundingMode;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -13,4 +14,5 @@ public class Constants {
 	static final Path filePath = Paths.get(DIRECTORY, Constants.FILE_NAME);
 	static final String PLAYER_SCORE = "Player score:";
 	static final String DEALER_SCORE = "Dealer score:";
+	static final RoundingMode ROUNDING_MODE = RoundingMode.DOWN;
 }

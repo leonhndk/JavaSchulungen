@@ -3,7 +3,7 @@ package de.esg.ausbildung.honl.game;
 /**
  * controls game flow and determines winner. Simplified BlackJack rules
  */
-public class SimpleGame {
+public class Game {
 	private Player player;
 	private Player dealer;
 	private Deck deck;
@@ -11,8 +11,9 @@ public class SimpleGame {
 	private int dealerWins;
 	private int playerWins;
 	public boolean gameFinished;
+	private int pot;
 
-	public SimpleGame(int numberOfDecks) {
+    public Game(int numberOfDecks) {
 		dealerWins = 0;
 		playerWins = 0;
 		this.player = new Player();
@@ -58,7 +59,7 @@ public class SimpleGame {
 				System.out.println("Player decides to stand");
 			}
 		} else {
-			System.out.println("\nPlayer draws a card...");
+			System.out.println("Player draws a card...");
 			player.addCard(deck.drawCard());
 			System.out.println("\nYour new hand:");
 			player.printHand();
@@ -91,6 +92,15 @@ public class SimpleGame {
 	 * with checkWinner
 	 */
 	private void playRound() {
+		if (player.getBalance() < 0.50) {
+			System.out.println("Insufficient funds for buy in! Game will be terminated.");
+			return;
+		}
+		pot = 0;
+		System.out.println("Collecting buy-in of 0,50 € for this round...");
+        int BUY_IN = 500;
+        player.charge(BUY_IN);
+		pot += BUY_IN;
 		player.resetHand();
 		dealer.resetHand();
 		if (deck.getDeckSize() < numberOfDecks * 52 * 0.2) {
@@ -99,9 +109,16 @@ public class SimpleGame {
 		}
 		deck.shuffleDeck();
 		initialDeal();
-		player.doubleAce();
+		player.doubleAce(); // no implementation of splitting ace mechanic yet, double ace is evaluated as 12 later on
 		dealer.doubleAce();
+		if (player.hasBlackjack()) {
+			System.out.println("Blackjack! You win!");
+			playerWins++;
+			return;
+		}
 		while (true) {
+			int bet = Utils.promptBet();
+			player.makeBet(bet);
 			playerTurn();
 			if (player.isBust()) {
 				System.out.println("Player is bust! Dealer wins!");
@@ -112,6 +129,9 @@ public class SimpleGame {
 			if (dealer.isBust()) {
 				System.out.println("Dealer is bust! You win!");
 				playerWins++;
+				System.out.println("You win " + 2 * pot + " €");
+				player.setBalance(player.getBalance() + 2 * pot);
+				System.out.println("Your new balance: " + player.getBalance() + " €");
 				return;
 			}
 			if (!dealerDraws) {
@@ -161,17 +181,17 @@ public class SimpleGame {
 			deck = new Deck(0);
 			deck.getDeck().addAll(saveData.cardStack());
 			System.out.println(deck.getDeck());
-			System.out.println(deck.toString());
 			player.setBalance(saveData.balance());
 			System.out.println("Successfully loaded game save. Current scoreline: Player wins: " + playerWins
 					+ "\tDealer wins: " + dealerWins);
-			System.out.println(player.getBalance() + " €");
+			System.out.println("Your balance is: " + player.getBalance() + " €");
 		}
 		// if user chooses to start anew, reset round wins and supply fresh stack of
 		// cards
 		if (!loadGame || deck == null) {
 			playerWins = 0;
 			dealerWins = 0;
+			player.setBalance(10000);
 			this.deck = new Deck(numberOfDecks);
 		}
 		// play rounds until user decides to quit
